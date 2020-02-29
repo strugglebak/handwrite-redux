@@ -35,7 +35,7 @@ export default function applyMiddleware(...middlewares) {
   // 接受的参数是旧的 createStore 函数
   return (oldCreateStore) =>
     // 对于上面的 newCreateStore 函数来说，返回的是一个 newStore 对象
-    // 接受的参数是 reducer 函数 以及 initState 对象
+    // 接受的参数是 reducer 函数
     (reducer) => {
       // 生成 store
       const store = oldCreateStore(reducer)

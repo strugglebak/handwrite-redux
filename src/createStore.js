@@ -24,16 +24,16 @@
  * replaceReducer 的用法
   const reducer = combineReducers({
     counter: counterReducer
-  });
-  const store = createStore(reducer);
+  })
+  const store = createStore(reducer)
 
   // 生成新的reducer
   const nextReducer = combineReducers({
     counter: counterReducer,
     info: infoReducer
-  });
+  })
   // replaceReducer
-  store.replaceReducer(nextReducer);
+  store.replaceReducer(nextReducer)
  */
 export default function createStore(reducer, rewriteCreateStoreFunc) {
 
