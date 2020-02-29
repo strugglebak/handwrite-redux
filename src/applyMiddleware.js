@@ -34,9 +34,9 @@ export default function applyMiddleware(...middlewares) {
   return (oldCreateStore) =>
     // 对于上面的 newCreateStore 函数来说，返回的是一个 newStore 对象
     // 接受的参数是 reducer 函数 以及 initState 对象
-    (reducer, initState = {}) => {
+    (reducer) => {
       // 生成 store
-      const store = oldCreateStore(reducer, initState)
+      const store = oldCreateStore(reducer)
       // 给每个中间件传 store
       // middlewaresChain = [exception, time, logger]
       const middlewaresChain = middlewares.map(middleware => middleware(store))
