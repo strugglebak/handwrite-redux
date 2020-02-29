@@ -1,4 +1,35 @@
-export default function createStore(reducer) {
+/**
+ *
+ *
+ * 兼容 applyMiddleware API 的写法，比如
+ *
+ 1. 没有中间件时
+ import { createStore } from './redux'
+ const store = createStore(reducer)
+
+ 2. 有中间件时
+ import { createStore } from './redux'
+ const rewriteCreateStoreFunc = applyMiddleware(
+   exceptionMiddleware, timeMiddleware, loggerMiddleware
+ )
+ const store = rewriteCreateStoreFunc(createStore)(reducer)
+
+ * 兼容的写法如下(不管有无中间件)
+ import { createStore } from './redux'
+ const rewriteCreateStoreFunc = applyMiddleware(
+   exceptionMiddleware, timeMiddleware, loggerMiddleware
+ )
+ const store = createStore(reducer, rewriteCreateStoreFunc)
+
+ */
+export default function createStore(reducer, rewriteCreateStoreFunc) {
+
+  // 兼容有中间件写法的判断
+  if (rewriteCreateStoreFunc) {
+    const newCreateStore = rewriteCreateStoreFunc(createStore)
+    return newCreateStore
+  }
+
   // 一个局部的 state，只在这里使用
   let state
   // 订阅者数组
