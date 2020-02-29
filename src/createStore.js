@@ -66,7 +66,7 @@ export default function createStore(reducer, rewriteCreateStoreFunc) {
 
     // 这里调用 reducer 返回一个新的 state
     state = reducer(state, actions)
-    // 对应上面订阅，这里就是发布，本质上就是遍历 listeners 执行
+    // 对应上面订阅，这里就是发布，本质上就是遍历 listeners 执行订阅好的函数而已
     listeners.forEach(ln => ln())
   }
 
