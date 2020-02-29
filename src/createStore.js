@@ -24,6 +24,9 @@ export default function createStore(reducer) {
     state = reducer(state, actions)
   }
 
+  // 初始化 state，因为对于 reducer 来说，在碰到不能识别的 action type 时，会返回一个旧的 state
+  dispatch({})
+
   return {
     getState, dispatch
   }
