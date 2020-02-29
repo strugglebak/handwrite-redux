@@ -49,7 +49,7 @@ export default function createStore(reducer, rewriteCreateStoreFunc) {
     return unSubscribe
   }
 
-  const dispatch = (actions) => {
+  const dispatch = (action) => {
     // 注意这里的 reducer 就相当于
     // const reducer = (state, action)=>{
     //   if(state === undefined){
@@ -65,9 +65,16 @@ export default function createStore(reducer, rewriteCreateStoreFunc) {
     // }
 
     // 这里调用 reducer 返回一个新的 state
-    state = reducer(state, actions)
+    state = reducer(state, action)
     // 对应上面订阅，这里就是发布，本质上就是遍历 listeners 执行订阅好的函数而已
     listeners.forEach(ln => ln())
+  }
+
+  // 按需加载时，reducer 可以跟着组件在必要时加载，用新 reducer 替换老 reducer
+  const replaceReducer = (nextReducer) => {
+    reducer = nextReducer
+    // 刷新一遍 reducer 的值，新 reducer 把自己的默认状态放到 state 树上去
+    dispatch({type: Symbol()})
   }
 
   // 初始化 state，因为对于 reducer 来说，在碰到不能识别的 action type 时，会返回一个旧的 state
@@ -77,5 +84,6 @@ export default function createStore(reducer, rewriteCreateStoreFunc) {
     getState,
     subscribe,
     dispatch,
+    replaceReducer
   }
 }
