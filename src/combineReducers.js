@@ -21,13 +21,20 @@ export default function combineReducers(reducers) {
   // 对于 combineReducers 这个函数来说它返回的是一个新的 reducer 函数
   return (state = {}, action) => {
     let newState = {}
+    // 每次都会返回一个新的对象，要是数据没有变化，那么这个渲染就没有意义
+    // 所以需要加一个 [数据有没有变化] 的判断，只要数据没有变化，则返回原来的 state 即可
+    let hasChanged = false
     for (const key in reducers) {
       // 注意这里 key 就是 reducer 的名字，reducers[key] 就拿到了对应的 reducer 函数
       // state[key] 就拿到了每个 reducer 中传入的 state 数据
       // 注意看我最上面写的注释例子
-      newState[key] = reducers[key](state[key], action)
+      const previousStateForKey = state[key]
+      const nextStateForKey = reducers[key](previousStateForKey, action)
+      newState[key] = nextStateForKey
+      // 只要有一个 nextStateForKey 与 previousStateForKey 不相等了说明 state 就变了
+      hasChanged = hasChanged || nextStateForKey !== previousStateForKey
     }
-    // 对于一个新的 reducer 函数来说它返回的是一个新的 state
-    return newState
+    // 只有 state 变化了这种情况才需要返回一个新的 state，否则返回旧的 state
+    return hasChanged ? newState : state
   }
 }
