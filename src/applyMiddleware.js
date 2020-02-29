@@ -28,6 +28,8 @@
 
   const newStore = newCreateStore(reducer)
  */
+import compose from './compose'
+
 export default function applyMiddleware(...middlewares) {
   // 对于 applyMiddleware 这个函数来说，返回的是一个 newCreateStore 函数
   // 接受的参数是旧的 createStore 函数
@@ -46,9 +48,12 @@ export default function applyMiddleware(...middlewares) {
       // 所以数组这里需要 reverse
       // 不然调用关系就会变成 logger(time(exception(dispatch)))
       let { dispatch } = store
-      middlewaresChain.reverse().map(middleware => {
-        dispatch = middleware(dispatch)
-      })
+      // middlewaresChain.reverse().map(middleware => {
+      //   dispatch = middleware(dispatch)
+      // })
+
+      // 使用工具函数代替上面的代码
+      dispatch = compose(...middlewaresChain)(dispatch)
 
       // 重写 dispatch
       store.dispatch = dispatch
